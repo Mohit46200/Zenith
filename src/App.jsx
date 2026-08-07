@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import animation from "./assets/animation.mp4";
-
+import animation from "./assets/animation1.mp4";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -8,15 +7,13 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const NAV_LINKS = ["About", "Products", "Services", "Team", "Contact", "More"];
-
+const FRAME_COUNT = 225;
 const App = () => {
-  const videoRef = useRef(null);
+ 
   const container = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // =========================
-  // Navbar Animation
-  // =========================
+ 
   useGSAP(
     () => {
       const tl = gsap.timeline();
@@ -37,76 +34,75 @@ const App = () => {
           },
           "-=0.5"
         )
+      tl.from(".navlink",{
+        y:-50,
+        stagger:0.06,
+        duration:0.35,
+        opacity:0,
+        ease:"power4.out"
+      },"-=0.4")
         
     },
     { scope: container }
   );
 
-  // =========================
-  // Video Scroll Animation
-  // =========================
+  
+
+  const imageRef = useRef(null);
+
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const images = [];
 
-    const state = {
-      target: 0,
-    };
 
-    let ticker;
-    let trigger;
-
-    const start = () => {
-      if (!video.duration || Number.isNaN(video.duration)) return;
-
-      trigger = ScrollTrigger.create({
-        trigger: ".hero",
-        start: "top top",
-        end: "+=3000",
-        scrub: 0.5,
-        pin: true,
-        anticipatePin: 1,
-
-        onUpdate: (self) => {
-          state.target = self.progress * video.duration;
-        },
-      });
-
-      ticker = () => {
-        const delta = state.target - video.currentTime;
-
-        if (video.readyState >= 2 && Math.abs(delta) > 0.001) {
-          video.currentTime += delta * 0.12;
-        }
-      };
-
-      gsap.ticker.add(ticker);
-    };
-
-    video.addEventListener("loadedmetadata", start);
-
-    if (video.readyState >= 1) {
-      start();
+    for (let i = 1; i <= FRAME_COUNT; i++) {
+      const img = new Image();
+      img.src = `/frames/frame_${String(i).padStart(3, "0")}.jpg`;
+      images.push(img);
     }
 
+    images[0].onload = () => {
+      imageRef.current.src = images[0].src;
+    };
+
+    const playhead = {
+      frame: 0,
+    };
+
+    gsap.to(playhead, {
+      frame: FRAME_COUNT - 1,
+      snap: "frame",
+      ease: "none",
+
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "+=5000",
+        pin: true,
+        scrub: 1,
+      },
+
+      onUpdate: () => {
+        imageRef.current.src = images[playhead.frame].src;
+      },
+    });
+
     return () => {
-      video.removeEventListener("loadedmetadata", start);
-
-      if (ticker) gsap.ticker.remove(ticker);
-
-      if (trigger) trigger.kill();
+      ScrollTrigger.getAll().forEach((st) => st.kill());
     };
   }, []);
+
+
+
 
   return (
   <div ref={container} className="bg-[#1B1E23] text-white min-h-screen">
 
-    {/* ================= Navbar ================= */}
+   
     <nav className="navbar bg-tansparent fixed top-0 left-0 w-full z-50 bg-[#1B1E23]/95 backdrop-blur-md border-b border-white/10">
 
       <div className="max-w-7xl mx-auto h-20 px-6 lg:px-10 flex items-center justify-between">
 
-        {/* Logo */}
+       
         <div className="logo flex items-center gap-3">
 
           <div className="w-11 h-11 rounded-xl bg-white text-[#1B1E23] flex items-center justify-center font-bold text-xl">
@@ -115,23 +111,19 @@ const App = () => {
 
           <div>
             <h1 className="text-2xl font-bold leading-none">
-              Zenith
-            </h1>
-
-            <p className="text-gray-400 text-lg leading-none">
-              India
-            </p>
+              Zenith India
+            </h1>            
           </div>
 
         </div>
 
-        {/* Desktop Links */}
+        
         <ul className="nav-links flex items-center gap-8 font-medium text-gray-300">
 
           {NAV_LINKS.map((link) => (
             <li
               key={link}
-              className="cursor-pointer hover:text-white transition"
+              className="navlink cursor-pointer hover:text-white "
             >
               {link}
             </li>
@@ -139,7 +131,7 @@ const App = () => {
 
         </ul>
 
-        {/* Desktop Buttons */}
+       
         <div className="nav-buttons hidden items-center gap-4">
 
           <button className="px-5 py-3 rounded-xl bg-[#36384A] hover:bg-[#474A5A] transition">
@@ -156,7 +148,7 @@ const App = () => {
 
         </div>
 
-        {/* Mobile Menu */}
+       
         <button
           className="lg:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -198,25 +190,21 @@ const App = () => {
 
     </nav>
 
-    {/* ================= Hero ================= */}
-
-    <section className="hero relative h-screen overflow-hidden">
-
-      <video
-        ref={videoRef}
-        src={animation}
-        className="hero-video absolute inset-0 w-full h-full object-cover"
-        muted
-        playsInline
-        preload="auto"
+    
+    <section className="hero">
+      <img
+        ref={imageRef}
+        className="hero-image w-full h-screen"
+        alt=""
       />
-
-      <div className="absolute inset-0 bg-black/40"></div>
-
     </section>
+      <div className="w-full h-screen bg-black">
 
+      </div>
   </div>
 );
 };
 
 export default App;
+
+
