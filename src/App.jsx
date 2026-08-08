@@ -226,7 +226,7 @@ const App = () => {
 
     for (let i = 1; i <= FRAME_COUNT; i++) {
       const img = new Image();
-      img.src = `/frames/frame_${String(i).padStart(3, "0")}.png`;
+      img.src = `/frames/frame_${String(i).padStart(3, "0")}.avif`;
       images.push(img);
     }
 
@@ -246,7 +246,7 @@ const App = () => {
       scrollTrigger: {
         trigger: ".hero",
         start: "top top",
-        end: "+=8000",
+        end: "+=3500",
         pin: true,
         scrub: 1,
       },
