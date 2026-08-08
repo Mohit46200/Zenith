@@ -793,7 +793,6 @@ const App = () => {
       scrollTrigger: {
         trigger: ".hero2",
         start: "top top",
-        markers:true,
         end: "+=4000",
         pin: true,
         
