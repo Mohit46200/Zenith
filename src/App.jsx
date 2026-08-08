@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import animation from "./assets/animation1.mp4";
+import React, { useEffect, useRef, useState } from "react";
+import animation from "./assets/animation3.mp4";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -14,7 +14,9 @@ const App = () => {
   const container = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
- 
+  // =========================
+  // Navbar Animation
+  // =========================
   useGSAP(
     () => {
       const tl = gsap.timeline();
@@ -36,11 +38,12 @@ const App = () => {
           "-=0.5"
         )
         .from(".nav-links li",{
-          y:-85,
+          y:-50,
           stagger:0.15,
           duration:0.8,
-          ease:"power4.out"
-        },"-=0.45")
+          opacity:0,
+          ease:"power.out"
+        },"-=0.4")
         
     },
     { scope: container }
@@ -53,44 +56,52 @@ const App = () => {
     const video = videoRef.current;
     if (!video) return;
 
-    let videoTween;
-
-    const createVideoTween = () => {
-      // Metadata can be reported more than once by a browser. Keep exactly
-      // one ScrollTrigger/tween pair alive for the video.
-      if (videoTween || !Number.isFinite(video.duration) || video.duration <= 0) {
-        return;
-      }
-
-      // Seeking to the final frame can be unreliable in some browsers.
-      const finalFrame = Math.max(0, video.duration - 0.05);
-      video.currentTime = 0;
-
-      videoTween = gsap.to(video, {
-        currentTime: finalFrame,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "top top",
-          end: "+=2400",
-          scrub: 0.75,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
+    const state = {
+      target: 1,
     };
 
-    video.addEventListener("loadedmetadata", createVideoTween, { once: true });
+    let ticker;
+    let trigger;
+
+    const start = () => {
+      if (!video.duration || Number.isNaN(video.duration)) return;
+
+      trigger = ScrollTrigger.create({
+        trigger: ".hero",
+        start: "top top",
+        end: "+=2000",
+        scrub: 0.1,
+        pin: true,
+        anticipatePin: 1,
+
+        onUpdate: (self) => {
+          state.target = self.progress * video.duration;
+        },
+      });
+
+      ticker = () => {
+        const delta = state.target - video.currentTime;
+
+        if (video.readyState >= 2 && Math.abs(delta) > 0.001) {
+          video.currentTime += delta * 0.12;
+        }
+      };
+
+      gsap.ticker.add(ticker);
+    };
+
+    video.addEventListener("loadedmetadata", start);
 
     if (video.readyState >= 1) {
-      createVideoTween();
+      start();
     }
 
     return () => {
-      video.removeEventListener("loadedmetadata", createVideoTween);
-      videoTween?.scrollTrigger?.kill();
-      videoTween?.kill();
+      video.removeEventListener("loadedmetadata", start);
+
+      if (ticker) gsap.ticker.remove(ticker);
+
+      if (trigger) trigger.kill();
     };
   }, []);
 
@@ -211,6 +222,7 @@ const App = () => {
 
     </section>
 
+      
   </div>
 );
 };
