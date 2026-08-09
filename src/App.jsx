@@ -1047,8 +1047,8 @@ const App = () => {
             hero2
             absolute
             top-0
-            left-[10%]
-            w-[80%]
+            
+            w-[100%]
             h-screen
             z-10
             overflow-hidden
