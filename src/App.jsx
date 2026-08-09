@@ -691,158 +691,222 @@
 
 
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-
 const FRAME_COUNT_1 = 125;
 const FRAME_COUNT_2 = 180;
 
 const App = () => {
   const container = useRef(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
 
   const imageRef1 = useRef(null);
-
-  useEffect(() => {
-    const images = [];
-
-    for (let i = 1; i <= FRAME_COUNT_1; i++) {
-      const img = new Image();
-
-      img.src = `/frames/frame_${String(i).padStart(3, "0")}.avif`;
-
-      images.push(img);
-    }
-
-    images[0].onload = () => {
-      if (imageRef1.current) {
-        imageRef1.current.src = images[0].src;
-      }
-    };
-
-    const playhead = {
-      frame: 0,
-    };
-
-    const animation = gsap.to(playhead, {
-      frame: FRAME_COUNT_1 - 1,
-
-      snap: "frame",
-
-      ease: "none",
-
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "+=4000",
-        pin: true,
-        scrub: 2,
-      },
-
-      onUpdate: () => {
-        const frame = Math.round(playhead.frame);
-
-        if (images[frame] && imageRef1.current) {
-          imageRef1.current.src = images[frame].src;
-        }
-      },
-    });
-
-    return () => {
-      animation.kill();
-    };
-  }, []);
-
-
   const imageRef2 = useRef(null);
 
-  useEffect(() => {
-    const images = [];
+  useGSAP(
+    () => {
+  
 
-    for (let i = 1; i <= FRAME_COUNT_2; i++) {
-      const img = new Image();
+      const images1 = [];
+      const images2 = [];
 
-      img.src = `/frames2/frame_${String(i).padStart(4, "0")}.avif`;
+      
+      for (let i = 1; i <= FRAME_COUNT_1; i++) {
+        const img = new Image();
 
-      images.push(img);
-    }
+        img.src = `/frames/frame_${String(i).padStart(3, "0")}.avif`;
 
-    images[0].onload = () => {
-      if (imageRef2.current) {
-        imageRef2.current.src = images[0].src;
+        images1.push(img);
       }
-    };
 
-    const playhead = {
-      frame: 0,
-    };
+     
+      for (let i = 1; i <= FRAME_COUNT_2; i++) {
+        const img = new Image();
 
-    const animation = gsap.to(playhead, {
-      frame: FRAME_COUNT_2 - 1,
+        img.src = `/frames2/frame_${String(i).padStart(4, "0")}.avif`;
 
-      snap: "frame",
+        images2.push(img);
+      }
 
-      ease: "none",
-
-      scrollTrigger: {
-        trigger: ".hero2",
-        start: "top top",
-        end: "+=3500",
-        pin: true,
-        scrub: 3,
-      },
-
-      onUpdate: () => {
-        const frame = Math.round(playhead.frame);
-
-        if (images[frame] && imageRef2.current) {
-          imageRef2.current.src = images[frame].src;
+    
+      images1[0].onload = () => {
+        if (imageRef1.current) {
+          imageRef1.current.src = images1[0].src;
         }
-      },
-    });
+      };
 
-    return () => {
-      animation.kill();
-    };
-  }, []);
+      images2[0].onload = () => {
+        if (imageRef2.current) {
+          imageRef2.current.src = images2[0].src;
+        }
+      };
+
+      const playhead1 = {
+        frame: 0,
+      };
+
+      const playhead2 = {
+        frame: 0,
+      };
+
+     
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top top",
+
+         
+          end: "+=7000",
+
+          pin: true,
+          scrub: 1,
+
+          anticipatePin: 1,
+
+          
+        },
+      });
+
+   
+
+      tl.to(
+        playhead1,
+        {
+          frame: FRAME_COUNT_1 - 1,
+
+          snap: "frame",
+
+          ease: "none",
+
+          duration: 1,
+
+          onUpdate: () => {
+            const frame = Math.round(playhead1.frame);
+
+            if (images1[frame] && imageRef1.current) {
+              imageRef1.current.src = images1[frame].src;
+            }
+          },
+        },
+        0
+      );
+
+     
+      tl.fromTo(
+        ".hero2",
+        {
+          yPercent: 100,
+        },
+        {
+          yPercent: 0,
+
+          ease: "none",
+
+          duration: 0.2,
+        },
+        0.6
+      );
+
+
+        tl.to(
+          imageRef1.current,
+          {
+            opacity: 0,
+            ease: "none",
+            duration: 0.2,
+          },
+          0.6
+        );
+
+   
+      tl.to(
+        playhead2,
+        {
+          frame: FRAME_COUNT_2 - 1,
+
+          snap: "frame",
+
+          ease: "none",
+
+          duration: 0.8,
+
+          onUpdate: () => {
+            const frame = Math.round(playhead2.frame);
+
+            if (images2[frame] && imageRef2.current) {
+              imageRef2.current.src = images2[frame].src;
+            }
+          },
+        },
+        0.8
+      );
+
+    
+      return () => {
+        tl.kill();
+      };
+    },
+    {
+      scope: container,
+    }
+  );
 
   return (
-    <div ref={container} className="bg-[#1B1E23]">
+    <div
+      ref={container}
+      className="w-full bg-[#1B1E23] overflow-hidden"
+    >
 
+      
+      <section className="hero relative w-full h-screen overflow-hidden">
 
-      <section className="hero w-full h-screen">
+  
 
         <img
           ref={imageRef1}
-          className="w-full h-screen object-cover"
-          alt=""
+          className="
+            absolute
+            inset-0
+            w-full
+            h-full
+            object-cover
+          "
+          alt="Animation 1"
         />
 
+        
+        <section
+          className="
+            hero2
+            absolute
+            top-0
+            left-[10%]
+            w-[80%]
+            h-screen
+            z-10
+            overflow-hidden
+          "
+        >
+          <img
+            ref={imageRef2}
+            className="
+              w-full
+              h-full
+              object-cover
+            "
+            alt="Animation 2"
+          />
+        </section>
+
       </section>
-
-
-
-      <section className="hero2 w-full h-screen">
-
-        <img
-          ref={imageRef2}
-          className="w-full h-screen object-cover"
-          alt=""
-        />
-
-      </section>
-
-
-     
 
     </div>
   );
 };
 
 export default App;
+
