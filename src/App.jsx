@@ -843,7 +843,7 @@ const App = () => {
 
           pin: true,
           scrub: 1,
-          markers:true,
+          // markers:true,
           anticipatePin: 1,
 
         },
