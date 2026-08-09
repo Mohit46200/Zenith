@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const FRAME_COUNT_1 = 53;
-const FRAME_COUNT_NEW = 100; 
+const FRAME_COUNT_NEW = 90; 
 const FRAME_COUNT_2 = 180;
 const FRAME_COUNT_3 = 40;
 
