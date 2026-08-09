@@ -84,8 +84,8 @@
 //       <div className="absolute inset-0 bg-black/40"></div>
 
 //     </section>
-     
-      
+
+
 //   </div>
 // );
 // };
@@ -178,11 +178,11 @@
 // const NAV_LINKS = ["About", "Products", "Services", "Team", "Contact", "More"];
 // const FRAME_COUNT = 125;
 // const App = () => {
- 
+
 //   const container = useRef(null);
 //   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
- 
+
 //   useGSAP(
 //     () => {
 //       const tl = gsap.timeline();
@@ -210,12 +210,12 @@
 //         opacity:0,
 //         ease:"power4.out"
 //       },"-=0.4")
-        
+
 //     },
 //     { scope: container }
 //   );
 
-  
+
 
 //   const imageRef = useRef(null);
 
@@ -266,12 +266,12 @@
 //   return (
 //   <div ref={container} className="bg-[#1B1E23] text-white min-h-screen">
 
-   
+
 //     <nav className="navbar bg-tansparent fixed top-0 left-0 w-full z-50 bg-[#1B1E23]/95 backdrop-blur-md border-b border-white/10">
 
 //       <div className="max-w-7xl mx-auto h-20 px-6 lg:px-10 flex items-center justify-between">
 
-       
+
 //         <div className="logo flex items-center gap-3">
 
 //           <div className="w-11 h-11 rounded-xl bg-white text-[#1B1E23] flex items-center justify-center font-bold text-xl">
@@ -286,7 +286,7 @@
 
 //         </div>
 
-        
+
 //         <ul className="nav-links flex items-center gap-8 font-medium text-gray-300">
 
 //           {NAV_LINKS.map((link) => (
@@ -300,7 +300,7 @@
 
 //         </ul>
 
-       
+
 //         <div className="nav-buttons hidden items-center gap-4">
 
 //           <button className="px-5 py-3 rounded-xl bg-[#36384A] hover:bg-[#474A5A] transition">
@@ -317,7 +317,7 @@
 
 //         </div>
 
-       
+
 //         <button
 //           className="lg:hidden"
 //           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -359,7 +359,7 @@
 
 //     </nav>
 
-    
+
 //     <section className="hero">
 //       <img
 //         ref={imageRef}
@@ -536,7 +536,7 @@
 //         markers:true,
 //         end: "+=4000",
 //         pin: true,
-        
+
 //         scrub: 1,
 //       },
 
@@ -563,7 +563,7 @@
 
 //        <div className="max-w-7xl mx-auto h-20 px-6 lg:px-10 flex items-center justify-between">
 
-       
+
 //          <div className="logo flex items-center gap-3">
 
 //            <div className="w-11 h-11 rounded-xl bg-white text-[#1B1E23] flex items-center justify-center font-bold text-xl">
@@ -578,7 +578,7 @@
 
 //         </div>
 
-        
+
 //         <ul className="nav-links flex items-center gap-8 font-medium text-gray-300">
 
 //          {NAV_LINKS.map((link) => (
@@ -592,7 +592,7 @@
 
 //         </ul>
 
-       
+
 //         <div className="nav-buttons hidden items-center gap-4">
 
 //           <button className="px-5 py-3 rounded-xl bg-[#36384A] hover:bg-[#474A5A] transition">
@@ -609,7 +609,7 @@
 
 //         </div>
 
-       
+
 //         <button
 //           className="lg:hidden"
 //           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -652,7 +652,7 @@
 //     </nav> */}
 
 
-     
+
 
 //       <section className="hero w-full h-screen">
 
@@ -677,7 +677,7 @@
 //       </section>
 
 
-     
+
 
 //     </div>
 //   );
@@ -689,9 +689,7 @@
 
 
 
-
-
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -700,21 +698,29 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const FRAME_COUNT_1 = 125;
 const FRAME_COUNT_2 = 180;
+const FRAME_COUNT_3 = 40;
 
 const App = () => {
   const container = useRef(null);
 
   const imageRef1 = useRef(null);
   const imageRef2 = useRef(null);
+  const imageRef3 = useRef(null);
 
   useGSAP(
     () => {
-  
+      // ==========================================
+      // IMAGE ARRAYS
+      // ==========================================
 
       const images1 = [];
       const images2 = [];
+      const images3 = [];
 
-      
+      // ==========================================
+      // LOAD ANIMATION 1
+      // ==========================================
+
       for (let i = 1; i <= FRAME_COUNT_1; i++) {
         const img = new Image();
 
@@ -723,7 +729,10 @@ const App = () => {
         images1.push(img);
       }
 
-     
+      // ==========================================
+      // LOAD ANIMATION 2
+      // ==========================================
+
       for (let i = 1; i <= FRAME_COUNT_2; i++) {
         const img = new Image();
 
@@ -732,18 +741,51 @@ const App = () => {
         images2.push(img);
       }
 
-    
+      // ==========================================
+      // LOAD ANIMATION 3
+      // ==========================================
+
+      for (let i = 1; i <= FRAME_COUNT_3; i++) {
+        const img = new Image();
+
+        img.src = `/frames3/frame_${String(i).padStart(4, "0")}.avif`;
+
+        images3.push(img);
+      }
+
+      // ==========================================
+      // SET INITIAL FRAME 1
+      // ==========================================
+
       images1[0].onload = () => {
         if (imageRef1.current) {
           imageRef1.current.src = images1[0].src;
         }
       };
 
+      // ==========================================
+      // SET INITIAL FRAME 2
+      // ==========================================
+
       images2[0].onload = () => {
         if (imageRef2.current) {
           imageRef2.current.src = images2[0].src;
         }
       };
+
+      // ==========================================
+      // SET INITIAL FRAME 3
+      // ==========================================
+
+      images3[0].onload = () => {
+        if (imageRef3.current) {
+          imageRef3.current.src = images3[0].src;
+        }
+      };
+
+      // ==========================================
+      // PLAYHEADS
+      // ==========================================
 
       const playhead1 = {
         frame: 0,
@@ -753,25 +795,63 @@ const App = () => {
         frame: 0,
       };
 
-     
+      const playhead3 = {
+        frame: 0,
+      };
+
+      // ==========================================
+      // INITIAL POSITIONS
+      // ==========================================
+
+      // Animation 2 starts below the screen
+      gsap.set(".hero2", {
+        yPercent: 100,
+      });
+
+      // Animation 3 starts below the screen
+      gsap.set(".hero3", {
+        yPercent: 100,
+      });
+
+      // Animation 1 is visible initially
+      gsap.set(imageRef1.current, {
+        opacity: 1,
+      });
+
+      // Animation 2 is visible when it reaches the screen
+      gsap.set(".hero2", {
+        opacity: 1,
+      });
+
+      // Animation 3 is initially invisible because
+      // it is below the viewport
+      gsap.set(".hero3", {
+        opacity: 1,
+      });
+
+      // ==========================================
+      // MASTER TIMELINE
+      // ==========================================
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".hero",
           start: "top top",
 
-         
-          end: "+=7000",
+          // Total scroll distance
+          end:9000,
 
           pin: true,
           scrub: 1,
-
+          markers:true,
           anticipatePin: 1,
 
-          
         },
       });
 
-   
+      // =====================================================
+      // ANIMATION 1
+      // =====================================================
 
       tl.to(
         playhead1,
@@ -795,12 +875,12 @@ const App = () => {
         0
       );
 
-     
-      tl.fromTo(
+      // =====================================================
+      // ANIMATION 2 COMES FROM BOTTOM
+      // =====================================================
+
+      tl.to(
         ".hero2",
-        {
-          yPercent: 100,
-        },
         {
           yPercent: 0,
 
@@ -811,18 +891,26 @@ const App = () => {
         0.6
       );
 
+      // =====================================================
+      // ANIMATION 1 FADES OUT
+      // =====================================================
 
-        tl.to(
-          imageRef1.current,
-          {
-            opacity: 0,
-            ease: "none",
-            duration: 0.2,
-          },
-          0.6
-        );
+      tl.to(
+        imageRef1.current,
+        {
+          opacity: 0,
 
-   
+          ease: "none",
+
+          duration: 0.2,
+        },
+        0.6
+      );
+
+      // =====================================================
+      // ANIMATION 2 FRAME ANIMATION
+      // =====================================================
+
       tl.to(
         playhead2,
         {
@@ -832,7 +920,7 @@ const App = () => {
 
           ease: "none",
 
-          duration: 0.8,
+          duration: 2.2,
 
           onUpdate: () => {
             const frame = Math.round(playhead2.frame);
@@ -845,7 +933,68 @@ const App = () => {
         0.8
       );
 
-    
+      // =====================================================
+      // ANIMATION 3 COMES FROM BOTTOM
+      // =====================================================
+
+      tl.to(
+        ".hero3",
+        {
+          yPercent: 0,
+
+          ease: "none",
+
+          duration: 0.2,
+        },
+        1.6
+      );
+
+      // =====================================================
+      // ANIMATION 2 FADES OUT
+      // =====================================================
+
+      tl.to(
+        ".hero2",
+        {
+          opacity: 0,
+
+          ease: "none",
+
+          duration: 0.2,
+        },
+        1.6
+      );
+
+      // =====================================================
+      // ANIMATION 3 FRAME ANIMATION
+      // =====================================================
+
+      tl.to(
+        playhead3,
+        {
+          frame: FRAME_COUNT_3 - 1,
+
+          snap: "frame",
+
+          ease: "none",
+
+          duration: 0.5,
+
+          onUpdate: () => {
+            const frame = Math.round(playhead3.frame);
+
+            if (images3[frame] && imageRef3.current) {
+              imageRef3.current.src = images3[frame].src;
+            }
+          },
+        },
+        1.6
+      );
+
+      // ==========================================
+      // CLEANUP
+      // ==========================================
+
       return () => {
         tl.kill();
       };
@@ -858,13 +1007,24 @@ const App = () => {
   return (
     <div
       ref={container}
-      className="w-full bg-[#1B1E23] overflow-hidden"
+      className="page1 w-full bg-[#1B1E23] overflow-hidden"
     >
+      {/* ==========================================
+          MAIN PINNED AREA
+      ========================================== */}
 
-      
-      <section className="hero relative w-full h-screen overflow-hidden">
-
-  
+      <section
+        className="
+          hero
+          relative
+          w-full
+          h-screen
+          overflow-hidden
+        "
+      >
+        {/* ========================================
+            ANIMATION 1
+        ======================================== */}
 
         <img
           ref={imageRef1}
@@ -878,7 +1038,10 @@ const App = () => {
           alt="Animation 1"
         />
 
-        
+        {/* ========================================
+            ANIMATION 2
+        ======================================== */}
+
         <section
           className="
             hero2
@@ -902,11 +1065,35 @@ const App = () => {
           />
         </section>
 
-      </section>
+        {/* ========================================
+            ANIMATION 3
+            FULL SCREEN
+        ======================================== */}
 
+        <section
+          className="
+            hero3
+            absolute
+            inset-0
+            w-full
+            h-screen
+            z-20
+            overflow-hidden
+          "
+        >
+          <img
+            ref={imageRef3}
+            className="
+              w-full
+              h-full
+              object-cover
+            "
+            alt="Animation 3"
+          />
+        </section>
+      </section>
     </div>
   );
 };
 
 export default App;
-
