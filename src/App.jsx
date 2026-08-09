@@ -742,7 +742,7 @@ const App = () => {
         start: "top top",
         end: "+=4000",
         pin: true,
-        scrub: 1,
+        scrub: 2,
       },
 
       onUpdate: () => {
@@ -793,10 +793,9 @@ const App = () => {
       scrollTrigger: {
         trigger: ".hero2",
         start: "top top",
-        end: "+=4000",
+        end: "+=3500",
         pin: true,
-        
-        scrub: 1,
+        scrub: 3,
       },
 
       onUpdate: () => {
